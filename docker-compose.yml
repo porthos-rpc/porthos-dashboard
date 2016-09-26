@@ -1,0 +1,19 @@
+web:
+  build: .
+  working_dir: /go/src/github.com/porthos-rpc/porthos-dashboard
+  command: dockerize -wait tcp://broker:5672 -timeout 60s go run dashboard.go
+  links:
+   - broker
+  ports:
+   - "8080:8080"
+  environment:
+    BIND_ADDRESS: ":8080"
+    AMQP_URL: amqp://guest:guest@broker:5672/
+  volumes:
+   - .:/go/src/github.com/porthos-rpc/porthos-dashboard
+  hostname: dashboard
+broker:
+  image: rabbitmq:3.6-management
+  ports:
+   - "15672:15672"
+
