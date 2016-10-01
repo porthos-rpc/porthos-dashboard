@@ -9,7 +9,7 @@ install:
 services:
   - rabbitmq
 env:
-  - AMQP_URL=amqp://guest:guest@127.0.0.1:5672/
+  - BROKER_URL=amqp://guest:guest@127.0.0.1:5672/
 script: go test -v ./...
 notifications:
   email:
