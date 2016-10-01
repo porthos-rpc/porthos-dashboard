@@ -21,6 +21,24 @@
 			"revisionTime": "2015-10-06T22:16:25Z"
 		},
 		{
+			"checksumSHA1": "p/qzxBRYGQTr4JKDAN8JxtSv5iU=",
+			"path": "github.com/jmoiron/sqlx",
+			"revision": "05b81a7d5d38058e42148dc01f17daf4acba4640",
+			"revisionTime": "2016-09-14T23:45:33Z"
+		},
+		{
+			"checksumSHA1": "NJHTyLwheqVk7+syzj9UN7p1dKs=",
+			"path": "github.com/jmoiron/sqlx/reflectx",
+			"revision": "05b81a7d5d38058e42148dc01f17daf4acba4640",
+			"revisionTime": "2016-09-14T23:45:33Z"
+		},
+		{
+			"checksumSHA1": "ToGxRLachRwa1HbVy7ZBdJaq5Zc=",
+			"path": "github.com/mattn/go-sqlite3",
+			"revision": "4b0af852c17164dce48e6754e3094c55192e4934",
+			"revisionTime": "2016-09-27T02:28:46Z"
+		},
+		{
 			"checksumSHA1": "rKV8YLkXpeNG1Oix8hlYqVsEFb4=",
 			"path": "github.com/streadway/amqp",
 			"revision": "2e25825abdbd7752ff08b270d313b93519a0a232",

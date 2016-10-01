@@ -7,9 +7,12 @@ import (
 	"os"
 	"time"
 
+	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/facebookgo/httpdown"
 	"github.com/porthos-rpc/porthos-dashboard/handlers"
 	"github.com/porthos-rpc/porthos-dashboard/metrics"
+	"github.com/porthos-rpc/porthos-dashboard/storage"
 )
 
 func defaultValue(a, b string) string {
@@ -23,6 +26,7 @@ func defaultValue(a, b string) string {
 func main() {
 	bindAddress := flag.String("bind", defaultValue(os.Getenv("BIND_ADDRESS"), ":3000"), "Bind Address.")
 	brokerURL := flag.String("broker", defaultValue(os.Getenv("BROKER_URL"), "amqp://"), "Broker URL.")
+	db := flag.String("db", defaultValue(os.Getenv("DB_PATH"), ":memory:"), "DB Path / Memory")
 
 	flag.Parse()
 
@@ -32,6 +36,9 @@ func main() {
 	aggregator := metrics.NewAggregator(collector.MetricsChannel(), time.Minute*1)
 	go aggregator.Start()
 	go aggregator.StartShipper()
+
+	storage := storage.NewStorage(storage.NewDb("sqlite3", *db))
+	go metrics.StoreAggregatedMetrics(storage, aggregator.AggregatedMetricsChannel())
 
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/", handlers.IndexHandler)
