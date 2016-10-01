@@ -26,7 +26,12 @@ func main() {
 
 	flag.Parse()
 
-	metrics.NewCollector(*brokerURL)
+	collector := metrics.NewCollector(*brokerURL)
+	go collector.Start()
+
+	aggregator := metrics.NewAggregator(collector.MetricsChannel(), time.Minute*1)
+	go aggregator.Start()
+	go aggregator.StartShipper()
 
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/", handlers.IndexHandler)
