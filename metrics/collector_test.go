@@ -8,7 +8,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func TestMetricsShipperExtension(t *testing.T) {
+func TestCollector(t *testing.T) {
 	collector := NewCollector(os.Getenv("BROKER_URL"))
 	go collector.Start()
 
