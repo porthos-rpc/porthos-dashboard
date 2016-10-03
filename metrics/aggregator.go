@@ -62,6 +62,7 @@ func (a *Aggregator) aggregateMetric(m *MetricEntry) {
 		a.methods[key] = &models.AggregatedMetric{
 			ServiceName:  m.ServiceName,
 			MethodName:   m.MethodName,
+			Timestamp:    time.Now(),
 			Throughput:   0,
 			ResponseTime: 0,
 			Status2XX:    0,

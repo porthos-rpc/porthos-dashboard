@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 
@@ -39,21 +40,35 @@ func (s *DBStorage) Ping() bool {
 func (s *DBStorage) InsertAggregatedMetric(a *models.AggregatedMetric) {
 	fmt.Println("Inserting aggregated metric")
 
-	stmt, err := s.db.Prepare(`INSERT INTO metrics(
-		service_name, method_name, timestamp, throughput, responseTime, status2XX) VALUES(?, ?, ?, ?, ?)`)
+	stmt, _ := s.db.Prepare(`INSERT INTO metrics(
+		serviceName, methodName, timestamp, throughput, responseTime, status2XX) VALUES(?, ?, ?, ?, ?, ?)`)
 	defer stmt.Close()
 
-	if err != nil {
-		fmt.Errorf("Error preparing sql statement: %s", err)
-		return
-	}
-
-	_, err = stmt.Exec(a.ServiceName, a.MethodName, a.Timestamp, a.Throughput, a.ResponseTime, a.Status2XX)
+	_, err := stmt.Exec(a.ServiceName, a.MethodName, a.Timestamp, a.Throughput, a.ResponseTime, a.Status2XX)
 
 	if err != nil {
 		fmt.Errorf("Error executing sql statement: %s", err)
 	}
+}
 
+// FindMethodMetrics returns metrics since the given time (grouped by service.method).
+func (s *DBStorage) FindMethodMetrics(since time.Time) ([]models.ServiceMethodMetrics, error) {
+	metrics := []models.ServiceMethodMetrics{}
+
+	err := s.db.Select(&metrics, `SELECT serviceName, methodName,
+		MIN(throughput) as minThroughput, MAX(throughput) as maxThroughput, AVG(throughput) as avgThroughput,
+		MIN(responseTime) as minResponseTime, MAX(responseTime) as maxResponseTime, AVG(responseTime) as avgResponseTime,
+		MIN(status2XX) as minStatus2XX, MAX(status2XX) as maxStatus2XX, AVG(status2XX) as avgStatus2XX
+		FROM metrics
+		WHERE timestamp >= ?
+		GROUP BY serviceName, methodName
+	`, since)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return metrics, nil
 }
 
 // NewDb creates a new DB connection.
@@ -76,8 +91,8 @@ func NewDb(driver, url string) *sqlx.DB {
 func createSchemaIfNotExists(db *sqlx.DB) (sql.Result, error) {
 	schema := `CREATE TABLE IF NOT EXISTS metrics (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		service_name varchar NOT NULL,
-		method_name varchar NOT NULL,
+		serviceName varchar NOT NULL,
+		methodName varchar NOT NULL,
 		timestamp DATETIME NOT NULL,
 		throughput BIGINT NOT NULL,
 		responseTime BIGINT NOT NULL,

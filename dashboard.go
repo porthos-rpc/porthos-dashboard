@@ -42,6 +42,7 @@ func main() {
 
 	serveMux := http.NewServeMux()
 	serveMux.HandleFunc("/", handlers.IndexHandler)
+	serveMux.HandleFunc("/api/methods", handlers.NewMethodsHandler(storage))
 
 	server := &http.Server{
 		Addr:           *bindAddress,

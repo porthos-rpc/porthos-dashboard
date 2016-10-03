@@ -12,8 +12,8 @@ func TestCollector(t *testing.T) {
 	collector := NewCollector(os.Getenv("BROKER_URL"))
 	go collector.Start()
 
-	payload := []byte("[{\"serviceName\":\"UserService\",\"methodName\":\"doSomethingThatReturnsValue\",\"responsetime\":51996,\"statusCode\":200}, " +
-		"{\"serviceName\":\"UserService\",\"methodName\":\"doSomethingThatReturnsValue\",\"responsetime\":51996,\"statusCode\":200}]")
+	payload := []byte(`[{"serviceName":"UserService","methodName":"doSomethingThatReturnsValue","responsetime":51996,"statusCode":200},
+						{"serviceName":"UserService","methodName":"doSomethingThatReturnsValue","responsetime":51996,"statusCode":200}]`)
 
 	for i := 0; i < 3; i++ {
 		collector.channel.Publish(
