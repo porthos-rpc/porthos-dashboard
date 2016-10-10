@@ -8,12 +8,8 @@ class App extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.state = {cards: [
-            {serviceName: "UserContent", methodName: "getUserContents", avgResponseTime: 120, avgThroughput: 5533},
-            {serviceName: "UserContent", methodName: "getContentById", avgResponseTime: 20, avgThroughput: 1402},
-            {serviceName: "UserContent", methodName: "createContent2", avgResponseTime: 55, avgThroughput: 145},
-            {serviceName: "UserContent", methodName: "createContent3", avgResponseTime: 55, avgThroughput: 145},
-            {serviceName: "UserContent", methodName: "createContent4", avgResponseTime: 55, avgThroughput: 145},
-            {serviceName: "UserContent", methodName: "createContent5", avgResponseTime: 55, avgThroughput: 145},
+            {serviceName: "UserContent", methodName: "getUserContents", avgResponseTime: 120, avgThroughput: 5533, minResponseTime: 10, maxResponseTime: 120, minThroughput: 20, maxThroughput: 5533,
+                throughputHistory: [{value: 4000}, {value: 3000}, {value: 2000}, {value: 2780}, {value: 1890}, {value: 2390}, {value: 1490}]},
         ], range: 30};
     }
 

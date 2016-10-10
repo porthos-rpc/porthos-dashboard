@@ -82,7 +82,8 @@
 	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
 	        _this.handleChange = _this.handleChange.bind(_this);
-	        _this.state = { cards: [{ serviceName: "UserContent", methodName: "getUserContents", avgResponseTime: 120, avgThroughput: 5533 }, { serviceName: "UserContent", methodName: "getContentById", avgResponseTime: 20, avgThroughput: 1402 }, { serviceName: "UserContent", methodName: "createContent2", avgResponseTime: 55, avgThroughput: 145 }, { serviceName: "UserContent", methodName: "createContent3", avgResponseTime: 55, avgThroughput: 145 }, { serviceName: "UserContent", methodName: "createContent4", avgResponseTime: 55, avgThroughput: 145 }, { serviceName: "UserContent", methodName: "createContent5", avgResponseTime: 55, avgThroughput: 145 }], range: 30 };
+	        _this.state = { cards: [{ serviceName: "UserContent", methodName: "getUserContents", avgResponseTime: 120, avgThroughput: 5533, minResponseTime: 10, maxResponseTime: 120, minThroughput: 20, maxThroughput: 5533,
+	                throughputHistory: [{ value: 4000 }, { value: 3000 }, { value: 2000 }, { value: 2780 }, { value: 1890 }, { value: 2390 }, { value: 1490 }] }], range: 30 };
 	        return _this;
 	    }
 	
@@ -22578,8 +22579,6 @@
 	    _createClass(Card, [{
 	        key: 'render',
 	        value: function render() {
-	            var data = [{ name: 'Page A', value: 4000 }, { name: 'Page B', value: 3000 }, { name: 'Page C', value: 2000 }, { name: 'Page D', value: 2780 }, { name: 'Page E', value: 1890 }, { name: 'Page F', value: 2390 }, { name: 'Page G', value: 1490 }];
-	
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'card' },
@@ -22601,7 +22600,7 @@
 	                        { className: 'chart' },
 	                        _react2.default.createElement(
 	                            _Recharts.AreaChart,
-	                            { width: 280, height: 80, data: data, margin: { top: 0, right: 0, left: 0, bottom: 0 } },
+	                            { width: 280, height: 80, data: this.props.data.throughputHistory, margin: { top: 0, right: 0, left: 0, bottom: 0 } },
 	                            _react2.default.createElement(_Recharts.Tooltip, null),
 	                            _react2.default.createElement(_Recharts.Area, { type: 'monotone', dataKey: 'value', stroke: '#2c4c30', fill: '#c0d0b6' })
 	                        )
@@ -22638,7 +22637,11 @@
 	                        _react2.default.createElement(
 	                            'b',
 	                            null,
-	                            'Min: 10 ms Max: 100 ms'
+	                            'Min: ',
+	                            this.props.data.minResponseTime,
+	                            ' ms Max: ',
+	                            this.props.data.maxResponseTime,
+	                            ' ms'
 	                        )
 	                    )
 	                ),
@@ -22657,7 +22660,11 @@
 	                        _react2.default.createElement(
 	                            'b',
 	                            null,
-	                            'Min: 10 RPM Max: 100 RPM'
+	                            'Min: ',
+	                            this.props.data.minThroughput,
+	                            ' RPM Max: ',
+	                            this.props.data.maxThroughput,
+	                            ' RPM'
 	                        )
 	                    )
 	                )
