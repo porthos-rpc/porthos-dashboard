@@ -41,8 +41,10 @@ func main() {
 	go metrics.StoreAggregatedMetrics(storage, aggregator.AggregatedMetricsChannel())
 
 	serveMux := http.NewServeMux()
+
 	serveMux.HandleFunc("/", handlers.IndexHandler)
 	serveMux.HandleFunc("/api/methods", handlers.NewMethodsHandler(storage))
+	serveMux.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("client/public"))))
 
 	server := &http.Server{
 		Addr:           *bindAddress,

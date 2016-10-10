@@ -9,7 +9,7 @@ web:
   environment:
     BIND_ADDRESS: ":8080"
     BROKER_URL: amqp://guest:guest@broker:5672/
-    DB_PATH: "./dash.db"
+    # DB_PATH: "./dash.db"
   volumes:
    - .:/go/src/github.com/porthos-rpc/porthos-dashboard
   hostname: dashboard
