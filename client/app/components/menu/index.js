@@ -1,30 +1,39 @@
 import React from 'react';
-import { label } from './styles.css'
+import './styles.css'
 
 class Menu extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {since: 30};
-    this.onChangeSince = this.onChangeSince.bind(this);
-  }
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {since: 30}
+        this.items = [
+            {value: 30, label: '30 Minutes'},
+            {value: 60, label: '1 Hora'},
+            {value: 180, label: '3 Horas'},
+            {value: 720, label: '12 Horas'},
+            {value: 1440, label: '1 Dia'}
+        ]
+    }
 
-  onChangeSince () {
-    this.setState({since: 60});
-  }
+    handleChange (e) {
+        this.setState({since: e.target.value});
+        this.props.onChangeSince(e)
+    }
 
-  render() {
-    return (
-      <div className="since-box">
-        <span className="label">Since:</span>
-        <input name="since" type="radio" onChange={this.onChangeSince} value="30" checked="checked"/> 30 Minutes
-        <input name="since" type="radio" onChange={this.onChangeSince} value="60"/> 60 Minutes
-        <input name="since" type="radio" onChange={this.onChangeSince} value="180"/> 3 Hour
-        <input name="since" type="radio" onChange={this.onChangeSince} value="720"/> 6 Hours
-        <input name="since" type="radio" onChange={this.onChangeSince} value="1440"/> 1 Day
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="since-box">
+                <span className="label">Since:</span>
+                {this.items.map(item => (
+                    <label key={item.value}>
+                        <input key={item.value} name="since" type="radio" id={item.value} onChange={this.handleChange} value={item.value} checked={this.state.since == item.value} />
+                        {item.label}
+                    </label>
+                ))}
+            </div>
+        );
+    }
 
 }
 

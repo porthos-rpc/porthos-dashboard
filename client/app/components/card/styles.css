@@ -1,0 +1,50 @@
+.card {
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #f7f7f7;
+    margin: 5px;
+    background-color: #fdfdfd;
+    float: left;
+    color: #7b7b7b;
+}
+
+.card h2 {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 12pt;
+    color: #616161;
+}
+
+.card h3 {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-size: 10pt;
+}
+
+.card .chartAvgs {
+    margin-top: 10px;
+    display: flex;
+}
+
+.card .avgs {
+    font-size: 14pt;
+    line-height: 30px;
+    margin-left: 5px;
+    padding-left: 5px;
+    border-left: 1px solid #848484;
+    color: #8aa24e;
+}
+
+.card .cardCommonMetric {
+    margin-top: 5px;
+    font-size: 11pt;
+    height: 15px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
