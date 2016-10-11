@@ -7,10 +7,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {cards: [
-            {serviceName: "UserContent", methodName: "getUserContents", avgResponseTime: 120, avgThroughput: 5533, minResponseTime: 10, maxResponseTime: 120, minThroughput: 20, maxThroughput: 5533,
-                throughputHistory: [{value: 4000}, {value: 3000}, {value: 2000}, {value: 2780}, {value: 1890}, {value: 2390}, {value: 1490}]},
-        ], range: 30};
+        this.state = { cards: [], since: '-30m' }
     }
 
     render () {
@@ -22,10 +19,40 @@ class App extends React.Component {
         );
     }
 
+    componentDidMount() {
+        this.newFetchCycle(this.state.since)
+    }
+
     handleChange(e) {
         this.setState({
-            range: e.target.value
+            since: e.target.value
         }) 
+
+        this.newFetchCycle(e.target.value)
+    }
+
+    newFetchCycle(since) {
+        this.fetchData(since)
+        
+        if (this.interval) {
+            clearInterval(this.interval)
+        }
+
+        this.interval = setInterval(() => this.fetchData(this.state.since), 60 * 1000)
+    }
+
+    fetchData(since) {
+        let request = new XMLHttpRequest()
+
+        request.open('GET', '/api/methods?since=' + since, true)
+
+        request.onload = function() {
+            this.setState({
+                cards: JSON.parse(request.response)
+            })
+        }.bind(this); 
+
+        request.send()
     }
 }
 

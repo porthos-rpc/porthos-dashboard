@@ -9,5 +9,5 @@ import (
 // Storage structure.
 type Storage interface {
 	InsertAggregatedMetric(aggregatedMetric *models.AggregatedMetric)
-	FindMethodMetrics(since time.Time) ([]models.ServiceMethodMetrics, error)
+	FindMethodMetrics(since time.Time) ([]*models.ServiceMethodMetrics, error)
 }

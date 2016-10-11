@@ -1,7 +1,7 @@
 .card {
     width: 400px;
     padding: 10px;
-    border: 1px solid #f7f7f7;
+    border: 1px solid #efefef;
     margin: 5px;
     background-color: #fdfdfd;
     float: left;
@@ -39,6 +39,14 @@
     margin-top: 5px;
     font-size: 11pt;
     height: 15px;
+}
+
+.card .notEnoughData {
+    width: 280px;
+    height: 80px;
+    text-align: center;
+    padding-top: 25px;
+    box-sizing: border-box;
 }
 
 .left {

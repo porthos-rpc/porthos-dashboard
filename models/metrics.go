@@ -28,4 +28,6 @@ type ServiceMethodMetrics struct {
 	MinStatus2XX time.Duration `db:"minStatus2XX" json:"minStatus2XX"`
 	MaxStatus2XX time.Duration `db:"maxStatus2XX" json:"maxStatus2XX"`
 	AvgStatus2XX time.Duration `db:"avgStatus2XX" json:"avgStatus2XX"`
+
+	History []*AggregatedMetric `db:"history" json:"history"`
 }

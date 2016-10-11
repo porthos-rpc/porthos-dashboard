@@ -52,13 +52,13 @@ func (s *DBStorage) InsertAggregatedMetric(a *models.AggregatedMetric) {
 }
 
 // FindMethodMetrics returns metrics since the given time (grouped by service.method).
-func (s *DBStorage) FindMethodMetrics(since time.Time) ([]models.ServiceMethodMetrics, error) {
-	metrics := []models.ServiceMethodMetrics{}
+func (s *DBStorage) FindMethodMetrics(since time.Time) ([]*models.ServiceMethodMetrics, error) {
+	metrics := []*models.ServiceMethodMetrics{}
 
 	err := s.db.Select(&metrics, `SELECT serviceName, methodName,
-		MIN(throughput) as minThroughput, MAX(throughput) as maxThroughput, AVG(throughput) as avgThroughput,
-		MIN(responseTime) as minResponseTime, MAX(responseTime) as maxResponseTime, AVG(responseTime) as avgResponseTime,
-		MIN(status2XX) as minStatus2XX, MAX(status2XX) as maxStatus2XX, AVG(status2XX) as avgStatus2XX
+		MIN(throughput) as minThroughput, MAX(throughput) as maxThroughput, ROUND(AVG(throughput)) as avgThroughput,
+		MIN(responseTime) as minResponseTime, MAX(responseTime) as maxResponseTime, ROUND(AVG(responseTime)) as avgResponseTime,
+		MIN(status2XX) as minStatus2XX, MAX(status2XX) as maxStatus2XX, ROUND(AVG(status2XX)) as avgStatus2XX
 		FROM metrics
 		WHERE timestamp >= ?
 		GROUP BY serviceName, methodName
@@ -66,6 +66,26 @@ func (s *DBStorage) FindMethodMetrics(since time.Time) ([]models.ServiceMethodMe
 
 	if err != nil {
 		return nil, err
+	}
+
+	for _, m := range metrics {
+		err := s.db.Select(&m.History, `
+		SELECT
+			serviceName,
+			methodName,
+			ROUND(AVG(throughput)) as throughput,
+			ROUND(AVG(responseTime)) as responseTime 
+		FROM metrics 
+        WHERE timestamp >= ? AND serviceName = ? AND methodName = ?
+		GROUP BY
+			serviceName,
+			methodName,
+			strftime('%Y%m%d%H0', timestamp) + strftime('%M', timestamp)/?
+		`, since, m.ServiceName, m.MethodName, 5)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return metrics, nil

@@ -6,13 +6,14 @@ class Menu extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {since: 30}
+        this.state = {since: '-30m'}
         this.items = [
-            {value: 30, label: '30 Minutes'},
-            {value: 60, label: '1 Hora'},
-            {value: 180, label: '3 Horas'},
-            {value: 720, label: '12 Horas'},
-            {value: 1440, label: '1 Dia'}
+            {value: '-30m', label: '30 Minutes'},
+            {value: '-1h', label: '1 Hora'},
+            {value: '-3h', label: '3 Horas'},
+            {value: '-12h', label: '12 Horas'},
+            {value: '-24h', label: '1 Dia'},
+            {value: '-240h', label: '10 Dias'}
         ]
     }
 

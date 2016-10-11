@@ -82,8 +82,7 @@
 	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
 	        _this.handleChange = _this.handleChange.bind(_this);
-	        _this.state = { cards: [{ serviceName: "UserContent", methodName: "getUserContents", avgResponseTime: 120, avgThroughput: 5533, minResponseTime: 10, maxResponseTime: 120, minThroughput: 20, maxThroughput: 5533,
-	                throughputHistory: [{ value: 4000 }, { value: 3000 }, { value: 2000 }, { value: 2780 }, { value: 1890 }, { value: 2390 }, { value: 1490 }] }], range: 30 };
+	        _this.state = { cards: [], since: '-30m' };
 	        return _this;
 	    }
 	
@@ -98,11 +97,48 @@
 	            );
 	        }
 	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.newFetchCycle(this.state.since);
+	        }
+	    }, {
 	        key: 'handleChange',
 	        value: function handleChange(e) {
 	            this.setState({
-	                range: e.target.value
+	                since: e.target.value
 	            });
+	
+	            this.newFetchCycle(e.target.value);
+	        }
+	    }, {
+	        key: 'newFetchCycle',
+	        value: function newFetchCycle(since) {
+	            var _this2 = this;
+	
+	            this.fetchData(since);
+	
+	            if (this.interval) {
+	                clearInterval(this.interval);
+	            }
+	
+	            this.interval = setInterval(function () {
+	                return _this2.fetchData(_this2.state.since);
+	            }, 60 * 1000);
+	        }
+	    }, {
+	        key: 'fetchData',
+	        value: function fetchData(since) {
+	            var request = new XMLHttpRequest();
+	
+	            request.open('GET', '/api/methods?since=' + since, true);
+	
+	            request.onload = function () {
+	                this.setState({
+	                    cards: JSON.parse(request.response)
+	                });
+	            }.bind(this);
+	
+	            request.send();
 	        }
 	    }]);
 	
@@ -22029,8 +22065,8 @@
 	        var _this = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, props));
 	
 	        _this.handleChange = _this.handleChange.bind(_this);
-	        _this.state = { since: 30 };
-	        _this.items = [{ value: 30, label: '30 Minutes' }, { value: 60, label: '1 Hora' }, { value: 180, label: '3 Horas' }, { value: 720, label: '12 Horas' }, { value: 1440, label: '1 Dia' }];
+	        _this.state = { since: '-30m' };
+	        _this.items = [{ value: '-30m', label: '30 Minutes' }, { value: '-1h', label: '1 Hora' }, { value: '-3h', label: '3 Horas' }, { value: '-12h', label: '12 Horas' }, { value: '-24h', label: '1 Dia' }, { value: '-240h', label: '10 Dias' }];
 	        return _this;
 	    }
 	
@@ -22531,7 +22567,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".dashboardArea {\n    padding-top: 5px;\n}\n", ""]);
+	exports.push([module.id, ".dashboardArea {\n    padding-top: 2px;\n}\n", ""]);
 	
 	// exports
 
@@ -22579,6 +22615,24 @@
 	    _createClass(Card, [{
 	        key: 'render',
 	        value: function render() {
+	            var historyChart;
+	
+	            if (this.props.data.history.length > 1) {
+	                historyChart = _react2.default.createElement(
+	                    _Recharts.AreaChart,
+	                    { width: 280, height: 80, data: this.props.data.history, margin: { top: 0, right: 0, left: 0, bottom: 0 } },
+	                    _react2.default.createElement(_Recharts.Tooltip, null),
+	                    _react2.default.createElement(_Recharts.Area, { type: 'monotone', dataKey: 'throughput', stroke: '#2c4c30', fill: '#c0d0b6' }),
+	                    _react2.default.createElement(_Recharts.Area, { type: 'monotone', dataKey: 'responseTime', stroke: '#7b7815', fill: '#cab114' })
+	                );
+	            } else {
+	                historyChart = _react2.default.createElement(
+	                    'div',
+	                    { className: 'notEnoughData' },
+	                    'Not enough data...'
+	                );
+	            }
+	
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'card' },
@@ -22598,12 +22652,7 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'chart' },
-	                        _react2.default.createElement(
-	                            _Recharts.AreaChart,
-	                            { width: 280, height: 80, data: this.props.data.throughputHistory, margin: { top: 0, right: 0, left: 0, bottom: 0 } },
-	                            _react2.default.createElement(_Recharts.Tooltip, null),
-	                            _react2.default.createElement(_Recharts.Area, { type: 'monotone', dataKey: 'value', stroke: '#2c4c30', fill: '#c0d0b6' })
-	                        )
+	                        historyChart
 	                    ),
 	                    _react2.default.createElement(
 	                        'div',
@@ -56417,7 +56466,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".card {\n    width: 400px;\n    padding: 10px;\n    border: 1px solid #f7f7f7;\n    margin: 5px;\n    background-color: #fdfdfd;\n    float: left;\n    color: #7b7b7b;\n}\n\n.card h2 {\n    margin-top: 2px;\n    margin-bottom: 2px;\n    font-size: 12pt;\n    color: #616161;\n}\n\n.card h3 {\n    margin-top: 2px;\n    margin-bottom: 2px;\n    font-size: 10pt;\n}\n\n.card .chartAvgs {\n    margin-top: 10px;\n    display: flex;\n}\n\n.card .avgs {\n    font-size: 14pt;\n    line-height: 30px;\n    margin-left: 5px;\n    padding-left: 5px;\n    border-left: 1px solid #848484;\n    color: #8aa24e;\n}\n\n.card .cardCommonMetric {\n    margin-top: 5px;\n    font-size: 11pt;\n    height: 15px;\n}\n\n.left {\n    float: left;\n}\n\n.right {\n    float: right;\n}\n", ""]);
+	exports.push([module.id, ".card {\n    width: 400px;\n    padding: 10px;\n    border: 1px solid #efefef;\n    margin: 5px;\n    background-color: #fdfdfd;\n    float: left;\n    color: #7b7b7b;\n}\n\n.card h2 {\n    margin-top: 2px;\n    margin-bottom: 2px;\n    font-size: 12pt;\n    color: #616161;\n}\n\n.card h3 {\n    margin-top: 2px;\n    margin-bottom: 2px;\n    font-size: 10pt;\n}\n\n.card .chartAvgs {\n    margin-top: 10px;\n    display: flex;\n}\n\n.card .avgs {\n    font-size: 14pt;\n    line-height: 30px;\n    margin-left: 5px;\n    padding-left: 5px;\n    border-left: 1px solid #848484;\n    color: #8aa24e;\n}\n\n.card .cardCommonMetric {\n    margin-top: 5px;\n    font-size: 11pt;\n    height: 15px;\n}\n\n.card .notEnoughData {\n    width: 280px;\n    height: 80px;\n    text-align: center;\n    padding-top: 25px;\n    box-sizing: border-box;\n}\n\n.left {\n    float: left;\n}\n\n.right {\n    float: right;\n}\n", ""]);
 	
 	// exports
 

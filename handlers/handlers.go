@@ -18,7 +18,16 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 // NewMethodsHandler creates a new handler to return stats for metrics.
 func NewMethodsHandler(storage storage.Storage) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		metrics, err := storage.FindMethodMetrics(time.Now().Add(-30 * time.Minute))
+		sinceStr := r.URL.Query().Get("since")
+		var since time.Duration
+
+		if sinceStr != "" {
+			since, _ = time.ParseDuration(sinceStr)
+		} else {
+			since = -30 * time.Minute
+		}
+
+		metrics, err := storage.FindMethodMetrics(time.Now().Add(since))
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -9,16 +9,25 @@ class Card extends React.Component {
     }
 
     render() {
+        var historyChart;
+
+        if (this.props.data.history.length > 1) {
+            historyChart = <AreaChart width={280} height={80} data={this.props.data.history} margin={{top: 0, right: 0, left: 0, bottom: 0}}>
+                <Tooltip/>
+                <Area type='monotone' dataKey='throughput' stroke='#2c4c30' fill='#c0d0b6' />
+                <Area type='monotone' dataKey='responseTime' stroke='#7b7815' fill='#cab114' />
+            </AreaChart>
+        } else {
+            historyChart = <div className="notEnoughData">Not enough data...</div>
+        }
+
         return (
             <div className="card">
                 <h3>{this.props.data.serviceName}</h3> 
                 <h2>{this.props.data.methodName}</h2>
                 <div className="chartAvgs">
                     <div className="chart">
-                        <AreaChart width={280} height={80} data={this.props.data.throughputHistory} margin={{top: 0, right: 0, left: 0, bottom: 0}}>
-                            <Tooltip/>
-                            <Area type='monotone' dataKey='value' stroke='#2c4c30' fill='#c0d0b6' />
-                        </AreaChart> 
+                        {historyChart} 
                     </div>
                     <div className="avgs">
                         <div className="avgResponseTime">{this.props.data.avgResponseTime} ms</div> 
