@@ -10,6 +10,16 @@ var config = {
     path: BUILD_DIR,
     filename: 'bundle.js'
   },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
+  ]
   module : {
     loaders : [
       {
