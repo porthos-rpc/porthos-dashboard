@@ -11,15 +11,8 @@ var config = {
     filename: 'bundle.js'
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    })
-  ]
+
+  ],
   module : {
     loaders : [
       {
@@ -27,7 +20,7 @@ var config = {
         include : APP_DIR,
         loader : 'babel'
       },
-      { 
+      {
         test: /\.css$/,
         loader: "style-loader!css-loader"
       },
