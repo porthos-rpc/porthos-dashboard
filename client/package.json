@@ -22,6 +22,7 @@
     "webpack": "^1.13.2"
   },
   "devDependencies": {
+    "style-loader": "^0.13.1",
     "css-loader": "^0.25.0"
   }
 }
