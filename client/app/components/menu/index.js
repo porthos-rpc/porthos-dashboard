@@ -9,11 +9,11 @@ class Menu extends React.Component {
         this.state = {since: '-30m'}
         this.items = [
             {value: '-30m', label: '30 Minutes'},
-            {value: '-1h', label: '1 Hora'},
-            {value: '-3h', label: '3 Horas'},
-            {value: '-12h', label: '12 Horas'},
-            {value: '-24h', label: '1 Dia'},
-            {value: '-240h', label: '10 Dias'}
+            {value: '-1h', label: '1 Hour'},
+            {value: '-3h', label: '3 Hours'},
+            {value: '-12h', label: '12 Hours'},
+            {value: '-24h', label: '1 Day'},
+            {value: '-240h', label: '10 Days'}
         ]
     }
 
