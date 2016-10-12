@@ -1,4 +1,4 @@
-web:
+backend:
   build: .
   working_dir: /go/src/github.com/porthos-rpc/porthos-dashboard
   command: dockerize -wait tcp://broker:5672 -timeout 60s go run dashboard.go
@@ -13,6 +13,12 @@ web:
   volumes:
    - .:/go/src/github.com/porthos-rpc/porthos-dashboard
   hostname: dashboard
+frontend:
+  build: client
+  command: npm run watch
+  volumes:
+    - ./client:/home/app/dashboard
+    - ./client/node_modules:/home/app/dashboard/node_modules
 broker:
   image: rabbitmq:3.6-management
   ports:
