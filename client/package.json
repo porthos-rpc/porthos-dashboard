@@ -5,8 +5,9 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "./node_modules/.bin/webpack -d --watch",
-    "build": "./node_modules/.bin/webpack -p"
+    "watch": "./node_modules/.bin/webpack --config ./webpack.development.config.js --progress -d --watch",
+    "start": "npm run watch",
+    "build": "./node_modules/.bin/webpack --config ./webpack.production.config.js --progress"
   },
   "author": "",
   "license": "ISC",
